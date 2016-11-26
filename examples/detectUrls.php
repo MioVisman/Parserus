@@ -20,8 +20,8 @@ echo $parser->setBBCodes([
 #...
      },
     ],
-])->parse('Hello www.exemple.com World!')
+])->parse('Hello www.example.com World!')
   ->detectUrls()
   ->getCode();
 
-#output: Hello [url]www.exemple.com[/url] World!
+#output: Hello [url]www.example.com[/url] World!

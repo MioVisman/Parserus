@@ -358,7 +358,7 @@ class Parserus
      * @param  mixed    $list Массив bb-кодов, null и т.д.
      * @return Parserus $this
      */
-    public function setWhiteList($list)
+    public function setWhiteList($list = null)
     {
         $this->whiteList = is_array($list) ? $list : null;
         return $this;
@@ -370,7 +370,7 @@ class Parserus
      * @param  mixed    $list Массив bb-кодов, null и т.д.
      * @return Parserus $this
      */
-    public function setBlackList($list)
+    public function setBlackList($list = null)
     {
         $this->blackList = ! empty($list) && is_array($list) ? $list : null;
         return $this;
@@ -997,18 +997,10 @@ class Parserus
      * Метод ищет в текстовых узлах ссылки и создает на их месте узлы с bb-кодами url
      * Для уменьшения нагрузки использовать при сохранении, а не при выводе
      *
-     * @param  int      $id Указатель на текущий тег
      * @return Parserus $this
      */
-    public function detectUrls($id = 0)
+    public function detectUrls()
     {
-        if (! isset($this->bbcodes['url'])
-            || isset($this->data[$id]['text'])
-            || isset($this->data[$id]['text only'])
-        ) {
-            return $this;
-        }
-
         $pattern = '%\b(?<=\s|^)
             (?>(?:ht|f)tps?://|www\.|ftp\.)
             (?:[\p{L}\p{N}]+(?:[\p{L}\p{N}\-]*[\p{L}\p{N}])?\.)+
@@ -1020,40 +1012,75 @@ class Parserus
                 (?:\#[\p{L}\p{N}-]+)?
             )?%xu';
 
-        $children = $this->data[$id]['children'];
-        $this->data[$id]['children'] = [];
-
-        foreach ($children as $cid) {
-            if (! isset($this->data[$cid]['text'])) {
-                $this->data[$id]['children'][] = $cid;
-                $this->detectUrls($cid);
-            } else if (! isset($this->bbcodes['url']['parents'][$this->bbcodes[$this->data[$id]['tag']]['type']])) {
-                $this->data[$id]['children'][] = $cid;
-            } else {
-                $text = $this->data[$cid]['text'];
-                if (! preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE)) {
-                    $this->data[$id]['children'][] = $cid;
-                    continue;
-                }
-
-                $pos = 0;
-
-                foreach ($matches[0] as $match) {
-                    $this->addTextNode(substr($text, $pos, $match[1] - $pos), $id);
-
-                    $new = $this->addTagNode('url', $id, [], true);
-                    $this->addTextNode($match[0], $new);
-
-                    $pos = $match[1] + strlen($match[0]);
-                }
-
-                $this->addTextNode($this->endStr($text, $pos), $id);
-                unset($this->data[$cid]);
-            }
-        }
-        return $this;
+        return $this->detect('url', $pattern, true);
     }
 
+    /**
+     * Метод ищет в текстовых узлах совпадения с $pattern и создает на их месте узлы с bb-кодами $tag
+     *
+     * @param  string   $tag      Имя для создания bb-кода
+     * @param  string   $pattern  Регулярное выражение для поиска
+     * @param  bool     $textOnly Флаг. true, если содержимое созданного тега текстовое
+     * @return Parserus $this
+     */
+    protected function detect($tag, $pattern, $textOnly)
+    {
+        if (! isset($this->bbcodes[$tag])) {
+            return $this;
+        }
+
+        $error = null;
+        if (null !== $this->blackList && in_array($tag, $this->blackList)) {
+            $error = 1;
+        } else if (null !== $this->whiteList && ! in_array($tag, $this->whiteList)) {
+            $error = 2;
+        }
+
+        for ($id = $this->dataId; $id > 0; --$id) {
+            // не текстовый узел
+            if (! isset($this->data[$id]['text'])) {
+                continue;
+            }
+
+            $pid = $this->data[$id]['parent'];
+
+            // родитель может содержать только текст или не подходит по типу
+            if (isset($this->data[$pid]['text only']) ||
+                ! isset($this->bbcodes[$tag]['parents'][$this->bbcodes[$this->data[$pid]['tag']]['type']])
+            ) {
+                continue;
+            }
+
+            if (! preg_match_all($pattern, $this->data[$id]['text'], $matches, PREG_OFFSET_CAPTURE)) {
+                continue;
+            } else if ($error) {
+                $this->errors[] = [$error, $tag];
+                return $this;
+            }
+
+            $idx = array_search($id, $this->data[$pid]['children']);
+            $arrEnd = array_slice($this->data[$pid]['children'], $idx + 1);
+            $this->data[$pid]['children'] = array_slice($this->data[$pid]['children'], 0, $idx);
+
+            $pos = 0;
+
+            foreach ($matches[0] as $match) {
+                $this->addTextNode(substr($this->data[$id]['text'], $pos, $match[1] - $pos), $pid);
+
+                $new = $this->addTagNode($tag, $pid, [], $textOnly);
+                $this->addTextNode($match[0], $new);
+
+                $pos = $match[1] + strlen($match[0]);
+            }
+
+            $this->addTextNode($this->endStr($this->data[$id]['text'], $pos), $pid);
+            unset($this->data[$id]);
+
+            $this->data[$pid]['children'] = array_merge($this->data[$pid]['children'], $arrEnd);
+        }
+
+        return $this;
+    }
 
     /**
      * Метод удаляет пустые теги из дерева
