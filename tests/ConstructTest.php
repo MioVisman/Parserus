@@ -1,7 +1,5 @@
 <?php
 
-use Parserus;
-
 class ConstructTest extends PHPUnit_Framework_TestCase
 {
     public function testInit()
