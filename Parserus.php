@@ -762,7 +762,7 @@ class Parserus
      * @param  array    $opts Ассоциативный массив опций
      * @return Parserus $this
      */
-    public function parse($text, $opts = [])
+    public function parse($text, array $opts = [])
     {
         $this->reset($opts);
         $curText = '';
