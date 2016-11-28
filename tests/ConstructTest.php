@@ -8,7 +8,7 @@ class ConstructTest extends PHPUnit_Framework_TestCase
         $html = '&nbsp; &nbsp; Hello<br>&nbsp; &nbsp; World!';
         $xhtml = '&#160; &#160; Hello<br />&#160; &#160; World!';
 
-        $this->assertEquals(3, 1 + 2);
+        $this->assertEquals(true, class_exists('Parserus'));
 #        $parser = new Parserus();
 #        $this->assertEquals($html, $parser->parse($text)->getHTML());
 #

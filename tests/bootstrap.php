@@ -1,3 +1,3 @@
 <?php
 
-include 'Parserus.php';
+#include 'Parserus.php';
