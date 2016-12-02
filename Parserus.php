@@ -1155,10 +1155,11 @@ class Parserus
     /**
      * Метод возвращает массив ошибок
      *
-     * @param  array $lang Массив строк шаблонов описания ошибок
+     * @param  array $lang   Массив строк шаблонов описания ошибок
+     * @param  array $errors Массив, который дополняется ошибками
      * @return array
      */
-    public function getErrors(array $lang = [])
+    public function getErrors(array $lang = [], array $errors = [])
     {
         $defLang = [
             1 => 'Тег [%1$s] находится в черном списке',
@@ -1176,8 +1177,6 @@ class Parserus
             13 => 'В теге [%1$s] отсутствует обязательный атрибут \'%2$s\'',
             14 => 'Все теги пустые'
         ];
-
-        $errors = [];
 
         foreach ($this->errors as $args) {
             $err = array_shift($args);
