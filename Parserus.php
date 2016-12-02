@@ -715,7 +715,9 @@ class Parserus
         $curTag = $this->data[$curId]['tag'];
 
         while ($curTag !== $tag && $curId > 0) {
-            if (false === $this->bbcodes[$curTag]['auto']) {
+            if ($this->bbcodes[$tag]['type'] === 'inline'
+                || false === $this->bbcodes[$curTag]['auto']
+            ) {
                 break;
             }
 
