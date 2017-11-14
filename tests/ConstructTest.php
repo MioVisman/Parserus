@@ -1,6 +1,6 @@
 <?php
 
-class ConstructTest extends PHPUnit_Framework_TestCase
+class ConstructTest extends PHPUnit\Framework\TestCase
 {
     public function testInit()
     {
