@@ -120,6 +120,12 @@ class Parserus
     protected $strict = false;
 
     /**
+     * Максимальная глубина дерева тегов при строгом режиме поиска ошибок
+     * @var int
+     */
+    protected $maxDepth;
+
+    /**
      * Конструктор
      *
      * @param int $flag Один из флагов ENT_HTML401, ENT_XML1, ENT_XHTML, ENT_HTML5
@@ -139,6 +145,7 @@ class Parserus
      * Метод добавляет один bb-код
      *
      * @param  array    $bb   Массив описания bb-кода
+     *
      * @return Parserus $this
      */
     public function addBBCode(array $bb)
@@ -174,7 +181,7 @@ class Parserus
         }
 
         if (isset($bb['self nesting'])) {
-            $res['self nesting'] = (bool) $bb['self nesting'];
+            $res['self nesting'] = (int) $bb['self nesting'] > 0 ? (int) $bb['self nesting'] : false;
         }
 
         if (isset($bb['recursive'])) {
@@ -248,6 +255,7 @@ class Parserus
      * Метод задает массив bb-кодов
      *
      * @param  array    $bbcodes Массив описаний bb-кодов
+     *
      * @return Parserus $this
      */
     public function setBBCodes(array $bbcodes)
@@ -276,6 +284,7 @@ class Parserus
      * Метод задает массив смайлов
      *
      * @param  array    $smilies Ассоциативный массив смайлов
+     *
      * @return Parserus $this
      */
     public function setSmilies(array $smilies)
@@ -331,6 +340,7 @@ class Parserus
      * @param  string   $tpl  Строка шаблона, например: <img src="{url}" alt="{alt}">
      * @param  string   $tag  Имя тега под которым идет отображение смайлов
      * @param  array    $bl   Список тегов в которых не нужно отображать смайлы
+     *
      * @return Parserus $this
      */
     public function setSmTpl($tpl, $tag = 'img', array $bl = ['url'])
@@ -356,6 +366,7 @@ class Parserus
      * Метод устанавливает список разрешенных bb-кодов
      *
      * @param  mixed    $list Массив bb-кодов, null и т.д.
+     *
      * @return Parserus $this
      */
     public function setWhiteList($list = null)
@@ -368,6 +379,7 @@ class Parserus
      * Метод устанавливает список запрещенных bb-кодов
      *
      * @param  mixed    $list Массив bb-кодов, null и т.д.
+     *
      * @return Parserus $this
      */
     public function setBlackList($list = null)
@@ -381,6 +393,7 @@ class Parserus
      *
      * @param  string   $name Имя переменной
      * @param  mixed    $val  Значение переменной
+     *
      * @return Parserus $this
      */
     public function setAttr($name, $val)
@@ -393,6 +406,7 @@ class Parserus
      * Метод для получения значения переменной
      *
      * @param  string     $name Имя переменной
+     *
      * @return mixed|null       Значение переменной или null, если переменная не была задана ранее
      */
     public function attr($name)
@@ -407,6 +421,7 @@ class Parserus
      * @param  int    $parentId Указатель на родителя
      * @param  array  $attrs    Массив атрибутов тега
      * @param  bool   $textOnly Флаг. Если true, то в теле только текст
+     *
      * @return int              Указатель на данный тег
      */
     protected function addTagNode($tag, $parentId = null, $attrs = [], $textOnly = false)
@@ -434,6 +449,7 @@ class Parserus
      *
      * @param  string $text     Текст
      * @param  int    $parentId Указатель на родителя
+     *
      * @return string           Пустая строка
      */
     protected function addTextNode($text, $parentId)
@@ -455,6 +471,7 @@ class Parserus
      * Метод нормализует содержимое атрибута
      *
      * @param  string $attr Содержимое атрибута полученное из регулярного выражения
+     *
      * @return string
      */
     protected function getNormAttr($attr)
@@ -476,6 +493,7 @@ class Parserus
      * @param  string           $tag  Имя обрабатываемого тега
      * @param  string           $type "Тип атрибутов" = ' ', '=' или ']'
      * @param  string           $text Текст из которого выделяются атрибуты
+     *
      * @return null|array
      */
     protected function parseAttrs($tag, $type, $text)
@@ -584,6 +602,7 @@ class Parserus
      * Метод определяет указатель на родительский тег для текущего
      *
      * @param  string    $tag Имя тега
+     *
      * @return int|false      false, если невозможно подобрать родителя
      */
     protected function findParent($tag)
@@ -629,6 +648,7 @@ class Parserus
      * @param  string      $tag   Имя тега
      * @param  array       $attrs Массив атрибутов
      * @param  string      $text  Текст из которого выделяется тело тега
+     *
      * @return array|false        false в случае ошибки
      */
     protected function validationTag($tag, $attrs, $text)
@@ -702,6 +722,7 @@ class Parserus
      * @param  string $tag     Имя обрабатываемого тега
      * @param  string $curText Текст до тега, который еще не был учтен
      * @param  string $tagText Текст самого тега - [/tag]
+     *
      * @return string          Пустая строка, если тег удалось закрыть
      */
     protected function closeTag($tag, $curText, $tagText) {
@@ -755,6 +776,7 @@ class Parserus
         $this->smOn = false;
         $this->errors = [];
         $this->strict = isset($opts['strict']) ? (bool) $opts['strict'] : false;
+        $this->maxDepth = isset($opts['depth']) ? (int) $opts['depth'] : 10;
     }
 
     /**
@@ -762,6 +784,7 @@ class Parserus
      *
      * @param  string   $text Обрабатываемый текст
      * @param  array    $opts Ассоциативный массив опций
+     *
      * @return Parserus $this
      */
     public function parse($text, array $opts = [])
@@ -871,13 +894,62 @@ class Parserus
         }
 
         $this->addTextNode($curText . $text, $this->curId);
+
+        if ($this->strict) {
+            $this->searchError();
+        }
+
         return $this;
+    }
+
+    /**
+     * Метод проверяет глубину дерева тегов
+     * Метод проверяет лимит вложенности тегов в самих себя
+     *
+     * @param int   $id    Указатель на текущий тег
+     * @param int   $depth Глубина дерева на текущий момент
+     * @param array $tags  Массив количества вложений тегов с включенным 'self nesting'
+     *
+     * @return bool
+     */
+    protected function searchError($id = 0, $depth = -1, array $tags = [])
+    {
+        if (isset($this->data[$id]['text'])) {
+            return false;
+        }
+
+        ++$depth;
+
+        if ($depth > $this->maxDepth) {
+            $this->errors[] = [15, $this->maxDepth];
+            return true;
+        }
+
+        $tag = $this->data[$id]['tag'];
+        if (false !== $this->bbcodes[$tag]['self nesting']) {
+            if (isset($tags[$tag])) {
+                ++$tags[$tag];
+            } else {
+                $tags[$tag] = 0;
+            }
+            if ($tags[$tag] > $this->bbcodes[$tag]['self nesting']) {
+                $this->errors[] = [16, $tag, $this->bbcodes[$tag]['self nesting']];
+                return true;
+            }
+        }
+        foreach ($this->data[$id]['children'] as $child) {
+            if ($this->searchError($child, $depth, $tags)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Метод возвращает HTML построенный на основании дерева тегов
      *
      * @param  int    $id Указатель на текущий тег
+     *
      * @return string
      */
     public function getHtml($id = 0)
@@ -954,6 +1026,7 @@ class Parserus
      * Метод возвращает текст с bb-кодами построенный на основании дерева тегов
      *
      * @param  int    $id Указатель на текущий тег
+     *
      * @return string
      */
     public function getCode($id = 0)
@@ -1023,6 +1096,7 @@ class Parserus
      * @param  string   $tag      Имя для создания bb-кода
      * @param  string   $pattern  Регулярное выражение для поиска
      * @param  bool     $textOnly Флаг. true, если содержимое созданного тега текстовое
+     *
      * @return Parserus $this
      */
     protected function detect($tag, $pattern, $textOnly)
@@ -1114,6 +1188,7 @@ class Parserus
      *
      * @param  string $mask Маска символов, которые не учитываются при определении пустоты текстовых узлов
      * @param  int    $id   Указатель на текущий тег
+     *
      * @return bool         Если true, то тег/узел пустой
      */
     protected function stripEmptyTags_($mask, $id)
@@ -1159,6 +1234,7 @@ class Parserus
      *
      * @param  array $lang   Массив строк шаблонов описания ошибок
      * @param  array $errors Массив, который дополняется ошибками
+     *
      * @return array
      */
     public function getErrors(array $lang = [], array $errors = [])
@@ -1177,7 +1253,9 @@ class Parserus
             11 => 'Тело тега [%1$s] не соответствует шаблону',
             12 => 'Тег [%1$s] нельзя открыть внутри аналогичного тега',
             13 => 'В теге [%1$s] отсутствует обязательный атрибут \'%2$s\'',
-            14 => 'Все теги пустые'
+            14 => 'Все теги пустые',
+            15 => 'Глубина дерева тегов больше %1$s',
+            16 => 'Тег [%1$s] вложен в себя больше %2$s раз',
         ];
 
         foreach ($this->errors as $args) {
@@ -1201,6 +1279,7 @@ class Parserus
      * Метод преобразует специальные символы в HTML-сущности
      *
      * @param  string $text
+     *
      * @return string
      */
     public function e($text)
@@ -1213,6 +1292,7 @@ class Parserus
      *
      * @param  string $str Текст
      * @param  int    $pos Начальная позиция в байтах с которой идет возврат текста
+     *
      * @return string
      */
     protected function endStr($str, $pos)
