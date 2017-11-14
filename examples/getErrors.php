@@ -32,7 +32,9 @@ $err = [
     11 => 'The body of [%1$s] doesn\'t correspond to a template',
     12 => '[%1$s] was opened within itself, this is not allowed',
     13 => 'In the [%1$s] is absent mandatory attribute \'%2$s\'',
-    14 => 'All tags are empty'
+    14 => 'All tags are empty',
+    15 => 'The depth of the tag tree is greater than %1$s',
+    16 => '[%1$s] is enclosed in itself more than %2$s times',
 ];
 
 var_dump($parser->getErrors($err));

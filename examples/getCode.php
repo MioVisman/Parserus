@@ -8,7 +8,7 @@ echo $parser->setBBCodes([
     ['tag' => 'table',
      'type' => 'table',
      'tags only' => true,
-     'self nesting' => true,
+     'self nesting' => 3,
      'attrs' => [
          'no attr' => true,
          'style' => true,
@@ -34,7 +34,7 @@ echo $parser->setBBCodes([
      'type' => 'tr',
      'parents' => ['table', 't'],
      'tags only' => true,
-     'self nesting' => true,
+     'self nesting' => 3,
      'attrs' => [
          'no attr' => true,
          'style' => true,
@@ -50,7 +50,7 @@ echo $parser->setBBCodes([
     ['tag' => 'th',
      'type' => 'block',
      'parents' => ['tr'],
-     'self nesting' => true,
+     'self nesting' => 3,
      'attrs' => [
          'no attr' => true,
          'style' => true,
@@ -68,7 +68,7 @@ echo $parser->setBBCodes([
     ['tag' => 'td',
      'type' => 'block',
      'parents' => ['tr'],
-     'self nesting' => true,
+     'self nesting' => 3,
      'attrs' => [
          'no attr' => true,
          'style' => true,
