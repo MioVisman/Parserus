@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright  Copyright (c) 2016 Visman. All rights reserved.
+ * @copyright  Copyright (c) 2016-2017 Visman. All rights reserved.
  * @author     Visman <mio.visman@yandex.ru>
  * @link       https://github.com/MioVisman/Parserus
  * @license    https://opensource.org/licenses/MIT The MIT License (MIT)
