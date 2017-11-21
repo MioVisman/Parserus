@@ -424,7 +424,7 @@ class Parserus
      *
      * @return int              Указатель на данный тег
      */
-    protected function addTagNode($tag, $parentId = null, $attrs = [], $textOnly = false)
+    protected function addTagNode($tag, $parentId = null, array $attrs = [], $textOnly = false)
     {
         $this->data[++$this->dataId] = [
             'tag'      => $tag,
@@ -650,7 +650,7 @@ class Parserus
      *
      * @return array|false        false в случае ошибки
      */
-    protected function validationTag($tag, $attrs, $text)
+    protected function validationTag($tag, array $attrs, $text)
     {
         if (empty($attrs)) {
             $attrs['no attr'] = null;
