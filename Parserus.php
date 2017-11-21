@@ -137,8 +137,8 @@ class Parserus
         }
         $this->eFlags = $flag | ENT_QUOTES | ENT_SUBSTITUTE;
         $this->tRepl = in_array($flag, [ENT_HTML5, ENT_HTML401])
-                     ? ['<br>',   '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;']
-                     : ['<br />', '&#160; &#160; ', '&#160; ', ' &#160;'];
+            ? ['<br>',   '&nbsp; &nbsp; ', '&nbsp; ', ' &nbsp;']
+            : ['<br />', '&#160; &#160; ', '&#160; ', ' &#160;'];
     }
 
     /**
@@ -405,9 +405,9 @@ class Parserus
     /**
      * Метод для получения значения переменной
      *
-     * @param  string     $name Имя переменной
+     * @param  string $name Имя переменной
      *
-     * @return mixed|null       Значение переменной или null, если переменная не была задана ранее
+     * @return mixed  Значение переменной или null, если переменная не была задана ранее
      */
     public function attr($name)
     {
@@ -427,10 +427,10 @@ class Parserus
     protected function addTagNode($tag, $parentId = null, $attrs = [], $textOnly = false)
     {
         $this->data[++$this->dataId] = [
-            'tag' => $tag,
-            'parent' => $parentId,
+            'tag'      => $tag,
+            'parent'   => $parentId,
             'children' => [],
-            'attrs' => $attrs,
+            'attrs'    => $attrs,
         ];
 
         if ($textOnly) {
@@ -455,9 +455,8 @@ class Parserus
     protected function addTextNode($text, $parentId)
     {
         if (isset($text[0])) {
-
             $this->data[++$this->dataId] = [
-                'text' => $text,
+                'text'   => $text,
                 'parent' => $parentId,
             ];
 
@@ -593,8 +592,8 @@ class Parserus
 
         return [
             'attrs' => $attrs,
-            'tag' => $tagText,
-            'text' => $text,
+            'tag'   => $tagText,
+            'text'  => $text,
         ];
     }
 
@@ -711,8 +710,8 @@ class Parserus
 
         return [
             'attrs' => $attrs,
-            'body' => $flag ? $body : null,
-            'end' => $end,
+            'body'  => $flag ? $body : null,
+            'end'   => $end,
         ];
     }
 
@@ -799,13 +798,13 @@ class Parserus
         while (($match = preg_split('%(\[(/)?(' . ($recCount ? $recTag : '[a-z\*][a-z\d-]{0,10}') . ')((?(1)\]|[=\]\x20])))%i', $text, 2, PREG_SPLIT_DELIM_CAPTURE))
                && isset($match[1])
         ) {
-         /* $match[0] - текст до тега
-          * $match[1] - [ + (|/) + имя тега + (]| |=)
-          * $match[2] - (|/)
-          * $match[3] - имя тега
-          * $match[4] - тип атрибутов --> (]| |=)
-          * $match[5] - остаток текста до конца
-          */
+            /* $match[0] - текст до тега
+             * $match[1] - [ + (|/) + имя тега + (]| |=)
+             * $match[2] - (|/)
+             * $match[3] - имя тега
+             * $match[4] - тип атрибутов --> (]| |=)
+             * $match[5] - остаток текста до конца
+             */
             $tagText = $match[1];
             $curText .= $match[0];
             $text = $match[5];
@@ -1149,7 +1148,7 @@ class Parserus
                 $pos = $match[1] + strlen($match[0]);
             }
 
-            $this->addTextNode($this->endStr($this->data[$id]['text'], $pos), $pid);
+            $this->addTextNode((string) substr($this->data[$id]['text'], $pos), $pid);
             unset($this->data[$id]);
 
             $this->data[$pid]['children'] = array_merge($this->data[$pid]['children'], $arrEnd);
@@ -1285,19 +1284,5 @@ class Parserus
     public function e($text)
     {
         return htmlspecialchars($text, $this->eFlags, 'UTF-8');
-    }
-
-    /**
-     * Метод возвращает окончание строки
-     *
-     * @param  string $str Текст
-     * @param  int    $pos Начальная позиция в байтах с которой идет возврат текста
-     *
-     * @return string
-     */
-    protected function endStr($str, $pos)
-    {
-        $s = substr($str, $pos);
-        return false === $s  ? '' : $s;
     }
 }
