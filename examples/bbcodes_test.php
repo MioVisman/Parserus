@@ -30,11 +30,11 @@ $bbcodes = [
     ['tag' => 'code',
      'type' => 'block',
      'recursive' => true,
-     'text only' => true,
+     'text_only' => true,
      'pre' => true,
      'attrs' => [
          'Def' => true,
-         'no attr' => true,
+         'No_attr' => true,
      ],
      'handler' => function($body, $attrs) {
          $body = trim($body, "\n\r");
@@ -91,7 +91,7 @@ $bbcodes = [
      },
     ],
     ['tag' => 'color',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'attrs' => [
          'Def' => [
              'format' => '%^(?:\#(?:[\dA-Fa-f]{3}){1,2}|(?:aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|yellow|white))$%',
@@ -102,7 +102,7 @@ $bbcodes = [
      },
     ],
     ['tag' => 'colour',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'attrs' => [
          'Def' => [
              'format' => '%^(?:\#(?:[\dA-Fa-f]{3}){1,2}|(?:aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|yellow|white))$%',
@@ -113,7 +113,7 @@ $bbcodes = [
      },
     ],
     ['tag' => 'background',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'attrs' => [
          'Def' => [
              'format' => '%^(?:\#(?:[\dA-Fa-f]{3}){1,2}|(?:aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|yellow|white))$%',
@@ -124,7 +124,7 @@ $bbcodes = [
      },
     ],
     ['tag' => 'size',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'attrs' => [
          'Def' => [
              'format' => '%^[1-9]\d*(?:em|ex|pt|px|\%)?$%',
@@ -161,7 +161,7 @@ $bbcodes = [
      },
     ],
     ['tag' => 'font',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'attrs' => [
          'Def' => [
              'format' => '%^[a-z\d, -]+$%i',
@@ -177,9 +177,9 @@ $bbcodes = [
          'Def' => [
              'format' => '%^[^\x00-\x1f\s]+?@[^\x00-\x1f\s]+$%',
          ],
-         'no attr' => [
-             'body format' => '%^[^\x00-\x1f\s]+?@[^\x00-\x1f\s]+$%D',
-             'text only' => true,
+         'No_attr' => [
+             'body_format' => '%^[^\x00-\x1f\s]+?@[^\x00-\x1f\s]+$%D',
+             'text_only' => true,
          ],
      ],
      'handler' => function($body, $attrs) {
@@ -192,7 +192,7 @@ $bbcodes = [
     ],
     ['tag' => '*',
      'type' => 'block',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'parents' => ['list'],
      'auto' => true,
      'handler' => function($body) {
@@ -201,11 +201,11 @@ $bbcodes = [
     ],
     ['tag' => 'list',
      'type' => 'list',
-     'self nesting' => 5,
-     'tags only' => true,
+     'self_nesting' => 5,
+     'tags_only' => true,
      'attrs' => [
          'Def' => true,
-         'no attr' => true,
+         'No_attr' => true,
      ],
      'handler' => function($body, $attrs) {
          if (!isset($attrs['Def'])) {
@@ -257,10 +257,10 @@ $bbcodes = [
     ],
     ['tag' => 'quote',
      'type' => 'block',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'attrs' => [
          'Def' => true,
-         'no attr' => true,
+         'No_attr' => true,
      ],
      'handler' => function($body, $attrs, $parser) {
          if (isset($attrs['Def'])) {
@@ -275,10 +275,10 @@ $bbcodes = [
     ],
     ['tag' => 'spoiler',
      'type' => 'block',
-     'self nesting' => 5,
+     'self_nesting' => 5,
      'attrs' => [
          'Def' => true,
-         'no attr' => true,
+         'No_attr' => true,
      ],
      'handler' => function($body, $attrs, $parser) {
          if (isset($attrs['Def'])) {
@@ -294,13 +294,13 @@ $bbcodes = [
     ['tag' => 'img',
      'type' => 'img',
      'parents' => ['inline', 'block', 'url'],
-     'text only' => true,
+     'text_only' => true,
      'attrs' => [
          'Def' => [
-             'body format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
+             'body_format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
          ],
-         'no attr' => [
-             'body format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
+         'No_attr' => [
+             'body_format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
          ],
      ],
      'handler' => function($body, $attrs, $parser) {
@@ -332,8 +332,8 @@ $bbcodes = [
          'Def' => [
              'format' => '%^[^\x00-\x1f]+$%',
          ],
-         'no attr' => [
-             'body format' => '%^[^\x00-\x1f]+$%D',
+         'No_attr' => [
+             'body_format' => '%^[^\x00-\x1f]+$%D',
          ],
      ],
      'handler' => function($body, $attrs, $parser) {
@@ -374,10 +374,10 @@ $bbcodes = [
     ],
     ['tag' => 'table',
      'type' => 'table',
-     'tags only' => true,
-     'self nesting' => 3,
+     'tags_only' => true,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
          'align' => true,
          'background' => true,
@@ -400,9 +400,9 @@ $bbcodes = [
     ['tag' => 'caption',
      'type' => 'block',
      'parents' => ['table'],
-     'self nesting' => 3,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
      ],
      'handler' => function($body, $attrs) {
@@ -416,10 +416,10 @@ $bbcodes = [
     ['tag' => 'thead',
      'type' => 't',
      'parents' => ['table'],
-     'tags only' => true,
-     'self nesting' => 3,
+     'tags_only' => true,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
      ],
      'handler' => function($body, $attrs) {
@@ -433,10 +433,10 @@ $bbcodes = [
     ['tag' => 'tbody',
      'type' => 't',
      'parents' => ['table'],
-     'tags only' => true,
-     'self nesting' => 3,
+     'tags_only' => true,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
      ],
      'handler' => function($body, $attrs) {
@@ -450,10 +450,10 @@ $bbcodes = [
     ['tag' => 'tfoot',
      'type' => 't',
      'parents' => ['table'],
-     'tags only' => true,
-     'self nesting' => 3,
+     'tags_only' => true,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
      ],
      'handler' => function($body, $attrs) {
@@ -467,10 +467,10 @@ $bbcodes = [
     ['tag' => 'tr',
      'type' => 'tr',
      'parents' => ['table', 't'],
-     'tags only' => true,
-     'self nesting' => 3,
+     'tags_only' => true,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
      ],
      'handler' => function($body, $attrs) {
@@ -484,9 +484,9 @@ $bbcodes = [
     ['tag' => 'th',
      'type' => 'block',
      'parents' => ['tr'],
-     'self nesting' => 3,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
          'colspan' => true,
          'rowspan' => true,
@@ -502,9 +502,9 @@ $bbcodes = [
     ['tag' => 'td',
      'type' => 'block',
      'parents' => ['tr'],
-     'self nesting' => 3,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
          'colspan' => true,
          'rowspan' => true,

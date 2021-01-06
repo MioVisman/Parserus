@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright  Copyright (c) 2016-2018 Visman. All rights reserved.
+ * @copyright  Copyright (c) 2016-2021 Visman. All rights reserved.
  * @author     Visman <mio.visman@yandex.ru>
  * @link       https://github.com/MioVisman/Parserus
  * @license    https://opensource.org/licenses/MIT The MIT License (MIT)
@@ -154,7 +154,7 @@ class Parserus
             'type' => 'inline',
             'parents' => ['inline' => 1, 'block' => 2],
             'auto' => true,
-            'self nesting' => false,
+            'self_nesting' => false,
         ];
 
         if ($bb['tag'] === 'ROOT') {
@@ -180,20 +180,20 @@ class Parserus
             $res['auto'] = (bool) $bb['auto'];
         }
 
-        if (isset($bb['self nesting'])) {
-            $res['self nesting'] = (int) $bb['self nesting'] > 0 ? (int) $bb['self nesting'] : false;
+        if (isset($bb['self_nesting'])) {
+            $res['self_nesting'] = (int) $bb['self_nesting'] > 0 ? (int) $bb['self_nesting'] : false;
         }
 
         if (isset($bb['recursive'])) {
             $res['recursive'] = true;
         }
 
-        if (isset($bb['text only'])) {
-            $res['text only'] = true;
+        if (isset($bb['text_only'])) {
+            $res['text_only'] = true;
         }
 
-        if (isset($bb['tags only'])) {
-            $res['tags only'] = true;
+        if (isset($bb['tags_only'])) {
+            $res['tags_only'] = true;
         }
 
         if (isset($bb['single'])) {
@@ -205,7 +205,7 @@ class Parserus
         }
 
         $res['handler'] = isset($bb['handler']) ? $bb['handler'] : null;
-        $res['text handler'] = isset($bb['text handler']) ? $bb['text handler'] : null;
+        $res['text_handler'] = isset($bb['text_handler']) ? $bb['text_handler'] : null;
 
         $required = [];
         $attrs = [];
@@ -214,22 +214,22 @@ class Parserus
         if (! isset($bb['attrs'])) {
             $cur = [];
 
-            if (isset($bb['body format'])) {
-                $cur['body format'] = $bb['body format'];
+            if (isset($bb['body_format'])) {
+                $cur['body_format'] = $bb['body_format'];
             }
-            if (isset($bb['text only'])) {
-                $cur['text only'] = true;
+            if (isset($bb['text_only'])) {
+                $cur['text_only'] = true;
             }
 
-            $attrs['no attr'] = $cur;
+            $attrs['No_attr'] = $cur;
         } else {
             foreach ($bb['attrs'] as $attr => $cur) {
                 if (! is_array($cur)) {
                     $cur = [];
                 }
 
-                if (isset($bb['text only'])) {
-                    $cur['text only'] = true;
+                if (isset($bb['text_only'])) {
+                    $cur['text_only'] = true;
                 }
 
                 $attrs[$attr] = $cur;
@@ -238,7 +238,7 @@ class Parserus
                     $required[] = $attr;
                 }
 
-                if ($attr !== 'Def' && $attr !== 'no attr') {
+                if ($attr !== 'Def' && $attr !== 'No_attr') {
                     $other = true;
                 }
             }
@@ -435,7 +435,7 @@ class Parserus
         ];
 
         if ($textOnly) {
-            $this->data[$this->dataId]['text only'] = true;
+            $this->data[$this->dataId]['text_only'] = true;
         }
 
         if (null !== $parentId) {
@@ -576,7 +576,7 @@ class Parserus
         if (empty($attrs)) {
             // в теге должны быть атрибуты
             if (! empty($this->bbcodes[$tag]['required'])
-                || ! isset($this->bbcodes[$tag]['attrs']['no attr'])
+                || ! isset($this->bbcodes[$tag]['attrs']['No_attr'])
             ) {
                 $this->errors[] = [6, $tag];
                 return null;
@@ -607,7 +607,7 @@ class Parserus
      */
     protected function findParent($tag)
     {
-        if (false === $this->bbcodes[$tag]['self nesting']) {
+        if (false === $this->bbcodes[$tag]['self_nesting']) {
             $curId = $this->curId;
 
             while (null !== $curId) {
@@ -654,7 +654,7 @@ class Parserus
     protected function validationTag($tag, array $attrs, $text)
     {
         if (empty($attrs)) {
-            $attrs['no attr'] = null;
+            $attrs['No_attr'] = null;
         }
 
         $body = null;
@@ -679,8 +679,8 @@ class Parserus
 
             // тело тега
             if (null === $body
-                && (isset($bb['attrs'][$key]['body format'])
-                    || isset($bb['attrs'][$key]['text only']))
+                && (isset($bb['attrs'][$key]['body_format'])
+                    || isset($bb['attrs'][$key]['text_only']))
             ) {
                 $ptag = preg_quote($tag, '%');
                 $match = preg_split('%^([^\[]*(?:\[(?!/' . $ptag . '\])[^\[]*)*)(?:\[/' . $ptag . '\])?%i', $text, 2, PREG_SPLIT_DELIM_CAPTURE);
@@ -689,25 +689,25 @@ class Parserus
                 $end = $match[2];
             }
 
-            // для тега с 'text only' устанавливается флаг для возврата тела
-            if (isset($bb['attrs'][$key]['text only'])) {
+            // для тега с 'text_only' устанавливается флаг для возврата тела
+            if (isset($bb['attrs'][$key]['text_only'])) {
                 $flag = true;
             }
 
             // проверка формата тела тега
-            if (isset($bb['attrs'][$key]['body format'])) {
-                if (isset($tested[$bb['attrs'][$key]['body format']])) {
+            if (isset($bb['attrs'][$key]['body_format'])) {
+                if (isset($tested[$bb['attrs'][$key]['body_format']])) {
                     continue;
-                } else if (! preg_match($bb['attrs'][$key]['body format'], $body)) {
+                } else if (! preg_match($bb['attrs'][$key]['body_format'], $body)) {
                     $this->errors[] = [11, $tag];
                     return false;
                 }
 
-                $tested[$bb['attrs'][$key]['body format']] = true;
+                $tested[$bb['attrs'][$key]['body_format']] = true;
             }
         }
 
-        unset($attrs['no attr']);
+        unset($attrs['No_attr']);
 
         return [
             'attrs' => $attrs,
@@ -871,7 +871,7 @@ class Parserus
                 $tag,
                 $parentId,
                 $attrs['attrs'],
-                isset($attrs['body']) || isset($this->bbcodes[$tag]['text only'])
+                isset($attrs['body']) || isset($this->bbcodes[$tag]['text_only'])
             );
 
             if (isset($attrs['body'])) {
@@ -908,7 +908,7 @@ class Parserus
      *
      * @param int   $id    Указатель на текущий тег
      * @param int   $depth Глубина дерева на текущий момент
-     * @param array $tags  Массив количества вложений тегов с включенным 'self nesting'
+     * @param array $tags  Массив количества вложений тегов с включенным 'self_nesting'
      *
      * @return bool
      */
@@ -926,14 +926,14 @@ class Parserus
         }
 
         $tag = $this->data[$id]['tag'];
-        if (false !== $this->bbcodes[$tag]['self nesting']) {
+        if (false !== $this->bbcodes[$tag]['self_nesting']) {
             if (isset($tags[$tag])) {
                 ++$tags[$tag];
             } else {
                 $tags[$tag] = 0;
             }
-            if ($tags[$tag] > $this->bbcodes[$tag]['self nesting']) {
-                $this->errors[] = [16, $tag, $this->bbcodes[$tag]['self nesting']];
+            if ($tags[$tag] > $this->bbcodes[$tag]['self_nesting']) {
+                $this->errors[] = [16, $tag, $this->bbcodes[$tag]['self_nesting']];
                 return true;
             }
         }
@@ -980,7 +980,7 @@ class Parserus
         $pid = $this->data[$id]['parent'];
         $bb = $this->bbcodes[$this->data[$pid]['tag']];
 
-        if (isset($bb['tags only'])) {
+        if (isset($bb['tags_only'])) {
             return '';
         }
 
@@ -1001,7 +1001,7 @@ class Parserus
                 break;
         }
 
-        if (empty($this->data[$pid]['text only'])
+        if (empty($this->data[$pid]['text_only'])
             && $this->smOn
             && isset($this->bbcodes[$this->smTag]['parents'][$bb['type']])
             && ! isset($this->smBL[$this->data[$pid]['tag']])
@@ -1091,7 +1091,7 @@ class Parserus
 
             $bb = $this->bbcodes[$this->data[$id]['tag']];
 
-            if (null === $bb['text handler']) {
+            if (null === $bb['text_handler']) {
                 return $body;
             }
 
@@ -1102,13 +1102,13 @@ class Parserus
                 }
             }
 
-            return $bb['text handler']($body, $attrs, $this);
+            return $bb['text_handler']($body, $attrs, $this);
         }
 
         $pid = $this->data[$id]['parent'];
         $bb = $this->bbcodes[$this->data[$pid]['tag']];
 
-        return  isset($bb['tags only']) ? '' : $this->data[$id]['text'];
+        return  isset($bb['tags_only']) ? '' : $this->data[$id]['text'];
     }
 
     /**
@@ -1164,7 +1164,7 @@ class Parserus
             $pid = $this->data[$id]['parent'];
 
             // родитель может содержать только текст или не подходит по типу
-            if (isset($this->data[$pid]['text only']) ||
+            if (isset($this->data[$pid]['text_only']) ||
                 ! isset($this->bbcodes[$tag]['parents'][$this->bbcodes[$this->data[$pid]['tag']]['type']])
             ) {
                 continue;

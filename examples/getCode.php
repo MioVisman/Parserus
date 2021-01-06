@@ -7,10 +7,10 @@ $parser = new Parserus();
 echo $parser->setBBCodes([
     ['tag' => 'table',
      'type' => 'table',
-     'tags only' => true,
-     'self nesting' => 3,
+     'tags_only' => true,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
          'align' => true,
          'background' => true,
@@ -33,10 +33,10 @@ echo $parser->setBBCodes([
     ['tag' => 'tr',
      'type' => 'tr',
      'parents' => ['table', 't'],
-     'tags only' => true,
-     'self nesting' => 3,
+     'tags_only' => true,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
      ],
      'handler' => function($body, $attrs) {
@@ -50,9 +50,9 @@ echo $parser->setBBCodes([
     ['tag' => 'th',
      'type' => 'block',
      'parents' => ['tr'],
-     'self nesting' => 3,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
          'colspan' => true,
          'rowspan' => true,
@@ -68,9 +68,9 @@ echo $parser->setBBCodes([
     ['tag' => 'td',
      'type' => 'block',
      'parents' => ['tr'],
-     'self nesting' => 3,
+     'self_nesting' => 3,
      'attrs' => [
-         'no attr' => true,
+         'No_attr' => true,
          'style' => true,
          'colspan' => true,
          'rowspan' => true,

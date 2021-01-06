@@ -12,8 +12,8 @@ echo $parser->setBBCodes([
          'Def' => [
              'format' => '%^[^\x00-\x1f]+$%',
          ],
-         'no attr' => [
-             'body format' => '%^[^\x00-\x1f]+$%D',
+         'No_attr' => [
+             'body_format' => '%^[^\x00-\x1f]+$%D',
          ],
      ],
      'handler' => function($body, $attrs, $parser) {

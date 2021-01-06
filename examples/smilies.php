@@ -11,13 +11,13 @@ echo $parser->setSmilies([
     'tag' => 'img',
     'type' => 'img',
     'parents' => ['inline', 'block', 'url'],
-    'text only' => true,
+    'text_only' => true,
     'attrs' => [
         'Def' => [
-            'body format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
+            'body_format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
         ],
-        'no attr' => [
-            'body format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
+        'No_attr' => [
+            'body_format' => '%^(?:(?:ht|f)tps?://[^\x00-\x1f\s<"]+|data:image/[a-z]+;base64,(?:[a-zA-Z\d/\+\=]+))$%D'
         ],
     ],
     'handler' => function($body, $attrs, $parser) {
