@@ -7,6 +7,8 @@
  * @license    https://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
+declare(strict_types=1);
+
 class Parserus
 {
     /**
@@ -344,7 +346,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function setSmTpl($tpl, $tag = 'img', array $bl = ['url']): self
+    public function setSmTpl(string $tpl, string $tag = 'img', array $bl = ['url']): self
     {
         $this->smTpl = $tpl;
         $this->smTag = $tag;
