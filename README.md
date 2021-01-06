@@ -6,7 +6,7 @@ BBCode parser.
 
 ## Requirements
 
-* PHP 5.4.0
+* PHP 7.3.0+
 
 ## Installation
 
