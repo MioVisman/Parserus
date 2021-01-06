@@ -159,7 +159,7 @@ class Parserus
             'self_nesting' => false,
         ];
 
-        if ($bb['tag'] === 'ROOT') {
+        if ('ROOT' === $bb['tag']) {
             $tag = 'ROOT';
         } else {
             $tag = strtolower($bb['tag']);
@@ -168,7 +168,7 @@ class Parserus
         if (isset($bb['type'])) {
             $res['type'] = $bb['type'];
 
-            if ($bb['type'] !== 'inline') {
+            if ('inline' !== $bb['type']) {
                 $res['parents'] = ['block' => 1];
                 $res['auto']    = false;
             }
@@ -240,7 +240,10 @@ class Parserus
                     $required[] = $attr;
                 }
 
-                if ($attr !== 'Def' && $attr !== 'No_attr') {
+                if (
+                    'Def' !== $attr
+                    && 'No_attr' !== $attr
+                ) {
                     $other = true;
                 }
             }
@@ -328,7 +331,7 @@ class Parserus
                     if (count($sub) > 1) {
                         $pattern .= $quote . preg_quote($symbol, '%') . '(?:' . implode('|', $sub) . ')';
                         $quote    = '|';
-                    } else if (count($sub) == 1) {
+                    } elseif (1 == count($sub)) {
                         $pattern .= $quote . preg_quote($symbol, '%') . $sub[0];
                         $quote    = '|';
                     }
@@ -488,14 +491,18 @@ class Parserus
     protected function getNormAttr(string $attr): string
     {
         // удаление крайних кавычек
-        if (isset($attr[1])
-            && $attr[0] === $attr[strlen($attr) - 1]
-            && ($attr[0] === '"' || $attr[0] === '\'')
+        if (
+            isset($attr[1])
+            && $attr[0] === $attr[-1]
+            && (
+                '"' === $attr[0]
+                || '\'' === $attr[0]
+            )
         ) {
             return substr($attr, 1, -1);
+        } else {
+            return $attr;
         }
-
-        return $attr;
     }
 
     /**
@@ -512,7 +519,7 @@ class Parserus
         $attrs = [];
         $tagText = '';
 
-        if ($type === '=') {
+        if ('=' === $type) {
             $pattern = '%^(?!\x20)
                 ("[^\x00-\x1f"]*(?:"+(?!\x20*+\]|\x20++[a-z-]{2,15}=)[^\x00-\x1f"]*)*"
                 |\'[^\x00-\x1f\']*(?:\'+(?!\x20*+\]|\x20++[a-z-]{2,15}=)[^\x00-\x1f\']*)*\'
@@ -535,7 +542,8 @@ class Parserus
                 $attrs['Def'] = $tmp;
 
                 // в теге не может быть первичного атрибута
-                if ($this->strict
+                if (
+                    $this->strict
                     && ! isset($this->bbcodes[$tag]['attrs']['Def'])
                 ) {
                     $this->errors[] = [7, $tag];
@@ -545,7 +553,7 @@ class Parserus
             }
         }
 
-        if ($type !== ']') {
+        if (']' !== $type) {
             $pattern = '%^\x20*+([a-z-]{2,15})
                 =(?!\x20)
                 ("[^\x00-\x1f"]*(?:"+(?!\x20*+\]|\x20++[a-z-]{2,15}=)[^\x00-\x1f"]*)*"
@@ -584,12 +592,13 @@ class Parserus
                     }
                 }
 
-            } while ($match[3] !== ']');
+            } while (']' !== $match[3]);
         }
 
         if (empty($attrs)) {
             // в теге должны быть атрибуты
-            if (! empty($this->bbcodes[$tag]['required'])
+            if (
+                ! empty($this->bbcodes[$tag]['required'])
                 || ! isset($this->bbcodes[$tag]['attrs']['No_attr'])
             ) {
                 $this->errors[] = [6, $tag];
@@ -643,8 +652,9 @@ class Parserus
         while (null !== $curId) {
             if (isset($this->bbcodes[$tag]['parents'][$this->bbcodes[$curTag]['type']])) {
                 return $curId;
-            } else if ($this->bbcodes[$tag]['type'] === 'inline'
-                       || false === $this->bbcodes[$curTag]['auto']
+            } elseif (
+                'inline' === $this->bbcodes[$tag]['type']
+                || false === $this->bbcodes[$curTag]['auto']
             ) {
                 // тег не может быть открыт на этой позиции
                 $this->errors[] = [3, $tag, $this->data[$this->curId]['tag']];
@@ -684,7 +694,8 @@ class Parserus
 
         foreach ($attrs as $key => $val) {
             // проверка формата атрибута
-            if (isset($bb['attrs'][$key]['format'])
+            if (
+                isset($bb['attrs'][$key]['format'])
                 && ! preg_match($bb['attrs'][$key]['format'], $val)
             ) {
                 $this->errors[] = [9, $tag, $key];
@@ -698,9 +709,12 @@ class Parserus
             }
 
             // тело тега
-            if (null === $body
-                && (isset($bb['attrs'][$key]['body_format'])
-                    || isset($bb['attrs'][$key]['text_only']))
+            if (
+                null === $body
+                && (
+                    isset($bb['attrs'][$key]['body_format'])
+                    || isset($bb['attrs'][$key]['text_only'])
+                )
             ) {
                 $ptag  = preg_quote($tag, '%');
                 $match = preg_split('%^([^\[]*(?:\[(?!/' . $ptag . '\])[^\[]*)*)(?:\[/' . $ptag . '\])?%i', $text, 2, PREG_SPLIT_DELIM_CAPTURE);
@@ -718,7 +732,7 @@ class Parserus
             if (isset($bb['attrs'][$key]['body_format'])) {
                 if (isset($tested[$bb['attrs'][$key]['body_format']])) {
                     continue;
-                } else if (! preg_match($bb['attrs'][$key]['body_format'], $body)) {
+                } elseif (! preg_match($bb['attrs'][$key]['body_format'], $body)) {
                     $this->errors[] = [11, $tag];
 
                     return false;
@@ -758,8 +772,12 @@ class Parserus
         $curId  = $this->curId;
         $curTag = $this->data[$curId]['tag'];
 
-        while ($curTag !== $tag && $curId > 0) {
-            if ($this->bbcodes[$tag]['type'] === 'inline'
+        while (
+            $curTag !== $tag
+            && $curId > 0
+        ) {
+            if (
+                'inline' === $this->bbcodes[$tag]['type']
                 || false === $this->bbcodes[$curTag]['auto']
             ) {
                 break;
@@ -794,7 +812,7 @@ class Parserus
         $this->data     = [];
         $this->dataId   = -1;
         $this->curId    = $this->addTagNode(
-            isset($opts['root']) && isset($this->bbcodes[$opts['root']])
+            isset($opts['root'], $this->bbcodes[$opts['root']])
             ? $opts['root']
             : 'ROOT'
         );
@@ -821,8 +839,9 @@ class Parserus
         $text = str_replace("\r\n", "\n", $text);
         $text = str_replace("\r", "\n", $text);
 
-        while (($match = preg_split('%(\[(/)?(' . ($recCount ? $recTag : '[a-z\*][a-z\d-]{0,10}') . ')((?(1)\]|[=\]\x20])))%i', $text, 2, PREG_SPLIT_DELIM_CAPTURE))
-               && isset($match[1])
+        while (
+            ($match = preg_split('%(\[(/)?(' . ($recCount ? $recTag : '[a-z\*][a-z\d-]{0,10}') . ')((?(1)\]|[=\]\x20])))%i', $text, 2, PREG_SPLIT_DELIM_CAPTURE))
+            && isset($match[1])
         ) {
             /* $match[0] - текст до тега
              * $match[1] - [ + (|/) + имя тега + (]| |=)
@@ -842,7 +861,10 @@ class Parserus
             }
 
             if (! empty($match[2])) {
-                if ($recCount && --$recCount) {
+                if (
+                    $recCount
+                    && --$recCount
+                ) {
                     $curText .= $tagText;
                 } else {
                     $curText = $this->closeTag($tag, $curText, $tagText);
@@ -868,13 +890,19 @@ class Parserus
                 continue;
             }
 
-            if (null !== $this->blackList && in_array($tag, $this->blackList)) {
+            if (
+                null !== $this->blackList
+                && in_array($tag, $this->blackList)
+            ) {
                 $curText .= $tagText;
                 $this->errors[] = [1, $tag];
                 continue;
             }
 
-            if (null !== $this->whiteList && ! in_array($tag, $this->whiteList)) {
+            if (
+                null !== $this->whiteList
+                && ! in_array($tag, $this->whiteList)
+            ) {
                 $curText .= $tagText;
                 $this->errors[] = [2, $tag];
                 continue;
@@ -905,7 +933,7 @@ class Parserus
                 $text = $attrs['end'];
                 $this->curId = $parentId;
 
-            } else if (isset($this->bbcodes[$tag]['single'])) {
+            } elseif (isset($this->bbcodes[$tag]['single'])) {
                 $this->curId = $parentId;
 
             } else {
@@ -1012,8 +1040,9 @@ class Parserus
             return '';
         }
 
-        switch (2 * (end($this->data[$pid]['children']) === $id)
-                + ($this->data[$pid]['children'][0] === $id)
+        switch (
+            2 * (end($this->data[$pid]['children']) === $id)
+            + ($this->data[$pid]['children'][0] === $id)
         ) {
             case 1:
                 $text = $this->e(preg_replace('%^\x20*\n%', '', $this->data[$id]['text']));
@@ -1029,7 +1058,8 @@ class Parserus
                 break;
         }
 
-        if (empty($this->data[$pid]['text_only'])
+        if (
+            empty($this->data[$pid]['text_only'])
             && $this->smOn
             && isset($this->bbcodes[$this->smTag]['parents'][$bb['type']])
             && ! isset($this->smBL[$this->data[$pid]['tag']])
@@ -1068,7 +1098,7 @@ class Parserus
             $body .= $this->getCode($cid);
         }
 
-        if ($id === 0) {
+        if (0 === $id) {
             return $body;
         }
 
@@ -1080,13 +1110,19 @@ class Parserus
         $count = count($attrs);
         foreach ($attrs as $attr => $val) {
             $quote = '';
-            if ($count > 1 || strpbrk($val, ' \'"]')) {
+            if (
+                $count > 1
+                || strpbrk($val, ' \'"]')
+            ) {
                 $quote = '"';
-                if (false !== strpos($val, '"') && false === strpos($val, '\'')) {
+                if (
+                    false !== strpos($val, '"')
+                    && false === strpos($val, '\'')
+                ) {
                     $quote = '\'';
                 }
             }
-            if ($attr === 'Def') {
+            if ('Def' === $attr) {
                 $def = '=' . $quote . $val . $quote;
             } else {
                 $other .= ' ' . $attr . '=' . $quote . $val . $quote;
@@ -1177,9 +1213,15 @@ class Parserus
         }
 
         $error = null;
-        if (null !== $this->blackList && in_array($tag, $this->blackList)) {
+        if (
+            null !== $this->blackList
+            && in_array($tag, $this->blackList)
+        ) {
             $error = 1;
-        } else if (null !== $this->whiteList && ! in_array($tag, $this->whiteList)) {
+        } elseif (
+            null !== $this->whiteList
+            && ! in_array($tag, $this->whiteList)
+        ) {
             $error = 2;
         }
 
@@ -1192,15 +1234,16 @@ class Parserus
             $pid = $this->data[$id]['parent'];
 
             // родитель может содержать только текст или не подходит по типу
-            if (isset($this->data[$pid]['text_only']) ||
-                ! isset($this->bbcodes[$tag]['parents'][$this->bbcodes[$this->data[$pid]['tag']]['type']])
+            if (
+                isset($this->data[$pid]['text_only'])
+                || ! isset($this->bbcodes[$tag]['parents'][$this->bbcodes[$this->data[$pid]['tag']]['type']])
             ) {
                 continue;
             }
 
             if (! preg_match_all($pattern, $this->data[$id]['text'], $matches, PREG_OFFSET_CAPTURE)) {
                 continue;
-            } else if ($error) {
+            } elseif ($error) {
                 $this->errors[] = [$error, $tag];
 
                 return $this;
@@ -1269,7 +1312,7 @@ class Parserus
         // текстовый узел
         if (isset($this->data[$id]['text'])) {
             if (isset($mask[0])) {
-                return trim($this->data[$id]['text'], $mask) === '';
+                return '' === trim($this->data[$id]['text'], $mask);
             } else {
                 return false;
             }
@@ -1337,7 +1380,7 @@ class Parserus
 
             if (isset($lang[$err])) {
                 $text = $lang[$err];
-            } else if (isset($defLang[$err])) {
+            } elseif (isset($defLang[$err])) {
                 $text = $defLang[$err];
             } else {
                 $text = 'Unknown error';
