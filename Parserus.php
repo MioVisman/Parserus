@@ -148,7 +148,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function addBBCode(array $bb)
+    public function addBBCode(array $bb): self
     {
         $res = [
             'type' => 'inline',
@@ -259,7 +259,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function setBBCodes(array $bbcodes)
+    public function setBBCodes(array $bbcodes): self
     {
         $this->bbcodes = [];
 
@@ -274,7 +274,7 @@ class Parserus
     /**
      * Метод устанавливает тег ROOT при его отсутствии
      */
-    protected function defaultROOT()
+    protected function defaultROOT(): void
     {
         if (! isset($this->bbcodes['ROOT'])) {
             $this->addBBCode(['tag' => 'ROOT', 'type' => 'block']);
@@ -288,7 +288,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function setSmilies(array $smilies)
+    public function setSmilies(array $smilies): self
     {
         $this->smilies = $smilies;
         $this->createSmPattern();
@@ -298,7 +298,7 @@ class Parserus
     /**
      * Метод генерирует паттерн для поиска смайлов в тексте
      */
-    protected function createSmPattern()
+    protected function createSmPattern(): void
     {
         if (empty($this->smilies)) {
             $this->smPattern = null;
@@ -344,7 +344,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function setSmTpl($tpl, $tag = 'img', array $bl = ['url'])
+    public function setSmTpl($tpl, $tag = 'img', array $bl = ['url']): self
     {
         $this->smTpl = $tpl;
         $this->smTag = $tag;
@@ -357,7 +357,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function detectSmilies()
+    public function detectSmilies(): self
     {
         $this->smOn = null !== $this->smPattern && isset($this->bbcodes[$this->smTag]);
         return $this;
@@ -370,7 +370,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function setWhiteList($list = null)
+    public function setWhiteList($list = null): self
     {
         $this->whiteList = is_array($list) ? $list : null;
         return $this;
@@ -383,7 +383,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function setBlackList($list = null)
+    public function setBlackList($list = null): self
     {
         $this->blackList = ! empty($list) && is_array($list) ? $list : null;
         return $this;
@@ -397,7 +397,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function setAttr($name, $val)
+    public function setAttr($name, $val): self
     {
         $this->attrs[$name] = $val;
         return $this;
@@ -425,7 +425,7 @@ class Parserus
      *
      * @return int              Указатель на данный тег
      */
-    protected function addTagNode($tag, $parentId = null, array $attrs = [], $textOnly = false)
+    protected function addTagNode(string $tag, int $parentId = null, array $attrs = [], bool $textOnly = false): int
     {
         $this->data[++$this->dataId] = [
             'tag'      => $tag,
@@ -453,7 +453,7 @@ class Parserus
      *
      * @return string           Пустая строка
      */
-    protected function addTextNode($text, $parentId)
+    protected function addTextNode(string $text, int $parentId): string
     {
         if (isset($text[0])) {
             $this->data[++$this->dataId] = [
@@ -474,7 +474,7 @@ class Parserus
      *
      * @return string
      */
-    protected function getNormAttr($attr)
+    protected function getNormAttr(string $attr): string
     {
         // удаление крайних кавычек
         if (isset($attr[1])
@@ -496,7 +496,7 @@ class Parserus
      *
      * @return null|array
      */
-    protected function parseAttrs($tag, $type, $text)
+    protected function parseAttrs(string $tag, string $type, string $text): ?array
     {
         $attrs = [];
         $tagText = '';
@@ -605,7 +605,7 @@ class Parserus
      *
      * @return int|false      false, если невозможно подобрать родителя
      */
-    protected function findParent($tag)
+    protected function findParent(string $tag)
     {
         if (false === $this->bbcodes[$tag]['self_nesting']) {
             $curId = $this->curId;
@@ -651,7 +651,7 @@ class Parserus
      *
      * @return array|false        false в случае ошибки
      */
-    protected function validationTag($tag, array $attrs, $text)
+    protected function validationTag(string $tag, array $attrs, string $text)
     {
         if (empty($attrs)) {
             $attrs['No_attr'] = null;
@@ -725,7 +725,8 @@ class Parserus
      *
      * @return string          Пустая строка, если тег удалось закрыть
      */
-    protected function closeTag($tag, $curText, $tagText) {
+    protected function closeTag(string $tag, string $curText, string $tagText): string
+    {
         // ошибка одиночного тега
         if (isset($this->bbcodes[$tag]['single'])) {
             $this->errors[] = [5, $tag];
@@ -763,7 +764,7 @@ class Parserus
      *
      * @param array $opts Ассоциативный массив опций
      */
-    protected function reset(array $opts)
+    protected function reset(array $opts): void
     {
         $this->defaultROOT();
         $this->data = [];
@@ -787,7 +788,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function parse($text, array $opts = [])
+    public function parse(string $text, array $opts = []): self
     {
         $this->reset($opts);
         $curText = '';
@@ -912,7 +913,7 @@ class Parserus
      *
      * @return bool
      */
-    protected function searchError($id = 0, $depth = -1, array $tags = [])
+    protected function searchError(int $id = 0, int $depth = -1, array $tags = []): bool
     {
         if (isset($this->data[$id]['text'])) {
             return false;
@@ -952,7 +953,7 @@ class Parserus
      *
      * @return string
      */
-    public function getHtml($id = 0)
+    public function getHtml(int $id = 0): string
     {
         if (isset($this->data[$id]['tag'])) {
 
@@ -1029,7 +1030,7 @@ class Parserus
      *
      * @return string
      */
-    public function getCode($id = 0)
+    public function getCode(int $id = 0): string
     {
         if (isset($this->data[$id]['text'])) {
             return $this->data[$id]['text'];
@@ -1075,7 +1076,7 @@ class Parserus
      *
      * @return string
      */
-    public function getText($id = 0)
+    public function getText(int $id = 0): string
     {
         if (isset($this->data[$id]['tag'])) {
 
@@ -1117,7 +1118,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    public function detectUrls()
+    public function detectUrls(): self
     {
         $pattern = '%\b(?<=\s|^)
             (?>(?:ht|f)tps?://|www\.|ftp\.)
@@ -1142,7 +1143,7 @@ class Parserus
      *
      * @return Parserus $this
      */
-    protected function detect($tag, $pattern, $textOnly)
+    protected function detect(string $tag, string $pattern, bool $textOnly): self
     {
         if (! isset($this->bbcodes[$tag])) {
             return $this;
@@ -1209,7 +1210,7 @@ class Parserus
      *                      но будет оставлена ошибка, которая отобразится в getErrors()
      * @return bool         Если true, то дерево тегов пусто
      */
-    public function stripEmptyTags($mask = '', $flag = false)
+    public function stripEmptyTags(string $mask = '', bool $flag = false): bool
     {
         if ($flag) {
             $data = $this->data;
@@ -1234,7 +1235,7 @@ class Parserus
      *
      * @return bool         Если true, то тег/узел пустой
      */
-    protected function stripEmptyTags_($mask, $id)
+    protected function stripEmptyTags_(string $mask, int $id): bool
     {
         // текстовый узел
         if (isset($this->data[$id]['text'])) {
@@ -1280,7 +1281,7 @@ class Parserus
      *
      * @return array
      */
-    public function getErrors(array $lang = [], array $errors = [])
+    public function getErrors(array $lang = [], array $errors = []): array
     {
         $defLang = [
             1 => 'Тег [%1$s] находится в черном списке',
@@ -1325,7 +1326,7 @@ class Parserus
      *
      * @return string
      */
-    public function e($text)
+    public function e(string $text): string
     {
         return htmlspecialchars($text, $this->eFlags, 'UTF-8');
     }
