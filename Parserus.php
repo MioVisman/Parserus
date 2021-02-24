@@ -1374,23 +1374,29 @@ class Parserus
      *
      * @param  array $lang   Массив строк шаблонов описания ошибок
      * @param  array $errors Массив, который дополняется ошибками
+     * @param  bool  $retTpl Флаг возрата результата в виде массива с шаблоном в первом элементе
      *
      * @return array
      */
-    public function getErrors(array $lang = [], array $errors = []): array
+    public function getErrors(array $lang = [], array $errors = [], bool $retTpl = false): array
     {
         foreach ($this->errors as $args) {
-            $err = array_shift($args);
+            $key  = array_key_first($args);
+            $err  = $args[$key];
+            $text = $lang[$err] ?? ($this->defLang[$err] ?? 'Unknown error');
 
-            if (isset($lang[$err])) {
-                $text = $lang[$err];
-            } elseif (isset($this->defLang[$err])) {
-                $text = $this->defLang[$err];
+            if ($retTpl) {
+                $args[$key] = $text;
+                $errors[]   = $args;
             } else {
-                $text = 'Unknown error';
+                $errors[] = vsprintf(
+                    $text,
+                    array_map(
+                        [$this, 'e'],
+                        array_slice($args, 1)
+                    )
+                );
             }
-
-            $errors[] = vsprintf($text, array_map([$this, 'e'], $args));
         }
 
         return $errors;
