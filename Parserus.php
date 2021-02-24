@@ -132,22 +132,22 @@ class Parserus
      * @var array
      */
     protected $defLang = [
-        1 => 'Тег [%1$s] находится в черном списке',
-        2 => 'Тег [%1$s] отсутствует в белом списке',
-        3 => 'Тег [%1$s] нельзя открыть внутри тега [%2$s]',
-        4 => 'Не найден начальный тег для парного тега [/%1$s]',
-        5 => 'Найден парный тег [/%1$s] для одиночного тега [%1$s]',
-        6 => 'В теге [%1$s] отсутствуют атрибуты',
-        7 => 'Тег [%1$s=...] не может содержать первичный атрибут',
-        8 => 'Тег [%1$s ...] не может содержать вторичные атрибуты',
-        9 => 'Атрибут \'%2$s\' тега [%1$s] не соответствует шаблону',
-        10 => 'Тег [%1$s ...] содержит неизвестный вторичный атрибут \'%2$s\'',
-        11 => 'Тело тега [%1$s] не соответствует шаблону',
-        12 => 'Тег [%1$s] нельзя открыть внутри аналогичного тега',
-        13 => 'В теге [%1$s] отсутствует обязательный атрибут \'%2$s\'',
-        14 => 'Все теги пустые',
-        15 => 'Глубина дерева тегов больше %1$s',
-        16 => 'Тег [%1$s] вложен в себя больше %2$s раз',
+        1 => '[%1$s] tag in blacklist',
+        2 => '[%1$s] tag not in whitelist',
+        3 => '[%1$s] tag can\'t be opened in [%2$s] tag',
+        4 => 'No start tag found for [/%1$s] tag',
+        5 => 'Found [/%1$s] tag for single [%1$s] tag',
+        6 => 'No attributes in [%1$s] tag',
+        7 => 'Primary attribute is forbidden in [%1$s] tag',
+        8 => 'Secondary attribute is forbidden in [%1$s] tag',
+        9 => 'Attribute \'%2$s\' does not match pattern in [%1$s] tag',
+        10 => '[%1$s] tag contains unknown secondary attribute \'%2$s\'',
+        11 => 'Body of [%1$s] tag does not match pattern',
+        12 => '[%1$s] tag was opened within itself, this is not allowed',
+        13 => 'Missing attribute \'%2$s\' in [%1$s] tag',
+        14 => 'All tags are empty',
+        15 => 'The depth of the tag tree is greater than %1$s',
+        16 => '[%1$s] tag is enclosed in itself more than %2$s times',
     ];
 
     /**
