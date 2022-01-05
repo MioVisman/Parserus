@@ -1207,15 +1207,11 @@ class Parserus
     public function detectUrls(): self
     {
         $pattern = '%\b(?<=\s|^)
-            (?>(?:ht|f)tps?://|www\.|ftp\.)
-            (?:[\p{L}\p{N}]+(?:[\p{L}\p{N}\-]*[\p{L}\p{N}])?\.)+
-            \p{L}[\p{L}\p{N}\-]*[\p{L}\p{N}]
-            (?::\d{1,5})?
-            (?:/
-                (?:[\p{L}\p{N};:@&=$_.+!*\'"(),\%/-]+)?
-                (?:\?[\p{L}\p{N};:@&=$_.+!*\'"(),\%-]+)?
-                (?:\#[\p{L}\p{N}-]+)?
-            )?%xu';
+            (?:(?:https?|ftp)://|(?:www|ftp)\.)
+            (?:\b[\p{L}\p{N}\-]++\b\.?){2,}
+            (?<!\.)
+            (?:[/?#][^\s]*(?<!\.))?
+            (?=\.?(?:\s|$))%xu';
 
         return $this->detect('url', $pattern, true);
     }
