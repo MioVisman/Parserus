@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright  Copyright (c) 2016-2021 Visman. All rights reserved.
+ * @copyright  Copyright (c) 2016-2022 Visman. All rights reserved.
  * @author     Visman <mio.visman@yandex.ru>
  * @link       https://github.com/MioVisman/Parserus
  * @license    https://opensource.org/licenses/MIT The MIT License (MIT)
@@ -1408,5 +1408,17 @@ class Parserus
     public function e(string $text): string
     {
         return htmlspecialchars($text, $this->eFlags, 'UTF-8');
+    }
+
+    /**
+     * Метод преобразует специальные HTML-сущности обратно в соответствующие символы
+     *
+     * @param  string $text
+     *
+     * @return string
+     */
+    public function de(string $text): string
+    {
+        return htmlspecialchars_decode($text, $this->eFlags);
     }
 }
