@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright  Copyright (c) 2016-2022 Visman. All rights reserved.
+ * @copyright  Copyright (c) 2016-2023 Visman. All rights reserved.
  * @author     Visman <mio.visman@yandex.ru>
  * @link       https://github.com/MioVisman/Parserus
  * @license    https://opensource.org/licenses/MIT The MIT License (MIT)
@@ -1268,7 +1268,8 @@ class Parserus
                 return $this;
             }
 
-            $idx = array_search($id, $this->data[$pid]['children']);
+            $key = array_search($id, $this->data[$pid]['children']);
+            $idx = array_search($key, array_keys($this->data[$pid]['children']));
             $arrEnd = array_slice($this->data[$pid]['children'], $idx + 1);
             $this->data[$pid]['children'] = array_slice($this->data[$pid]['children'], 0, $idx);
 
@@ -1284,6 +1285,7 @@ class Parserus
             }
 
             $this->addTextNode((string) substr($this->data[$id]['text'], $pos), $pid);
+
             unset($this->data[$id]);
 
             $this->data[$pid]['children'] = array_merge($this->data[$pid]['children'], $arrEnd);
