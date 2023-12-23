@@ -140,7 +140,7 @@ echo $parser->setBBCodes([
 
 #output:
 #
-# Position Astronaut Commander Neil A. Armstrong Command Module Pilot Michael Collins Lunar Module Pilot Edwin "Buzz" E. Aldrin, Jr.
+# Position Astronaut  Commander Neil A. Armstrong  Command Module Pilot Michael Collins  Lunar Module Pilot Edwin "Buzz" E. Aldrin, Jr.
 #My email spam@mail.ru
 #superspam@mail.ru
 #
