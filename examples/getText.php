@@ -64,6 +64,9 @@ echo $parser->setBBCodes([
          }
          return '<th' . $attr . '>' . $body . '</th>';
      },
+     'text_handler' => function($body, $attrs) {
+         return ' ' . $body;
+    },
     ],
     ['tag' => 'td',
      'type' => 'block',
@@ -82,7 +85,10 @@ echo $parser->setBBCodes([
          }
          return '<td' . $attr . '>' . $body . '</td>';
      },
-    ],
+     'text_handler' => function($body, $attrs) {
+        return ' ' . $body;
+   },
+   ],
     ['tag' => 'email',
     'type' => 'email',
     'attrs' => [
@@ -134,7 +140,7 @@ echo $parser->setBBCodes([
 
 #output:
 #
-#Position Astronaut Commander Neil A. Armstrong Command Module Pilot Michael Collins Lunar Module Pilot Edwin "Buzz" E. Aldrin, Jr.
+# Position Astronaut Commander Neil A. Armstrong Command Module Pilot Michael Collins Lunar Module Pilot Edwin "Buzz" E. Aldrin, Jr.
 #My email spam@mail.ru
 #superspam@mail.ru
 #
