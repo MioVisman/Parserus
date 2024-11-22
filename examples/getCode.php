@@ -105,7 +105,7 @@ echo $parser->setBBCodes([
 ')->getCode();
 
 #output:
-#[table align="right" border="1" bordercolor="#ccc" cellpadding="5" cellspacing="0" style="border-collapse:collapse; width:500px"]
+# [table align="right" border="1" bordercolor="#ccc" cellpadding="5" cellspacing="0" style="border-collapse:collapse; width:500px"]
 #		[tr]
 #			[th style=width:50%]Position[/th]
 #			[th style=width:50%]Astronaut[/th]
@@ -122,5 +122,5 @@ echo $parser->setBBCodes([
 #			[td]Lunar Module Pilot[/td]
 #			[td]Edwin "Buzz" E. Aldrin, Jr.[/td]
 #		[/tr]
-#[/table]
+# [/table]
 #

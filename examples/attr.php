@@ -17,8 +17,8 @@ echo $parser->addBBCode([
         $lang = $parser->attr('lang');
         $arr = array();
         $sec = $attrs['Def'] % 60;
-        $min = ($attrs['Def'] / 60) % 60;
-        $hours = ($attrs['Def'] / 3600) % 24;
+        $min = (int) ($attrs['Def'] / 60) % 60;
+        $hours = (int) ($attrs['Def'] / 3600) % 24;
         $days = (int) ($attrs['Def'] / 86400);
         if ($days > 0) {
             $arr[] = $days . $lang['After time d'];
